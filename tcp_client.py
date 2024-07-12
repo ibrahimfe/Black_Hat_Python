@@ -1,19 +1,34 @@
 import socket
 
-target_host = "www.google.com"
-target_port = 80
 
-# create a socket object =
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+def main():
+    # IP dan port yang digunakan server
+    server_ip = "127.0.0.1"  # Sesuaikan dengan IP server jika server tidak berjalan di localhost
+    server_port = 9998  # Sesuaikan dengan port server
 
-# Connect to the client
-client.connect((target_host, target_port))
+    # Buat socket untuk koneksi ke server
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# send some data
-client.send(b"GET / HTTP/1.1\r\n Host: google.com\r\n\r\n")
+    try:
+        # Lakukan koneksi ke server
+        client.connect((server_ip, server_port))
+        print(f"[*] Connected to {server_ip}:{server_port}")
 
-# receive some data
-response = client.recv(4096)
+        # Kirimkan data ke server
+        message = "Hello, Server!"
+        client.send(message.encode("utf-8"))
 
-print(response.decode())
-client.close()
+        # Terima respon dari server
+        response = client.recv(4096)
+        print(f"[*] Received: {response.decode('utf-8')}")
+
+    except Exception as e:
+        print(f"[!] Error: {e}")
+
+    finally:
+        # Tutup koneksi
+        client.close()
+
+
+if __name__ == "__main__":
+    main()
